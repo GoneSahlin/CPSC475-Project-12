@@ -20,7 +20,7 @@ def read_words(filename):
         filename(str): the name of the file to be read
 
     Returns:
-        list of strs: the words on the file lines
+        words(list of strs): the words on the file lines
     """
     words = []
     with open(filename, 'r') as infile:
