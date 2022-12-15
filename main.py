@@ -4,6 +4,7 @@ from nltk.corpus import movie_reviews
 from nltk.corpus import stopwords
 
 nltk.download('movie_reviews')
+nltk.download('stopwords')
 
 def read_words(filename):
     words = []
