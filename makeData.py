@@ -9,6 +9,7 @@ then:
 >>>nltk.download('movie_reviews')
 >>>nltk.download('stopwords')
 '''
+
 import nltk 
 from nltk.tokenize import word_tokenize
 from nltk.corpus import movie_reviews
@@ -45,13 +46,28 @@ def makeBagOfWords(reviewLst):
         bag = bag + words
     return bag
 
+def getBagOfWords(review):
+    '''
+    Extract words for one review
+    Throw out those that are not alphabetic as well as short frequent English words
+    Add the result to bag
+    At the end, bag will be the list of words in a certain category of review.
+    Use NLTK functions
+    '''
+    bag = []
+    words = movie_reviews.words(review)  #list of words in a review 
+    words = [word for word in words if word.isalpha()] #remove items witn non-alpha chars
+    stop_words = set(stopwords.words('english'))
+    words = [word for word in words if word not in stop_words] #stop words removed
+    bag = bag + words
+    
+    return bag
 
 def writeFile(fileName,dataName):
     with open(fileName,'w') as fout:
         for item in dataName:
             fout.write('%s\n' %item)
     fout.close()
-
     
 def main():
     '''
@@ -74,6 +90,6 @@ def main():
     
     writeFile('posTst.txt',posTst)
     writeFile('negTst.txt',negTst)
-        
-    
-main()
+          
+if __name__ == '__main__':
+    main()

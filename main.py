@@ -1,73 +1,22 @@
-import math
-import nltk
-from nltk.corpus import movie_reviews
-from nltk.corpus import stopwords
+"""
+Name: Zach Sahlin
+Name: Luke Martin
+Class: CPSC 475
+Date Submitted: December 13, 2022
+Assignment: Project 12
+File: main.py
+Description: This program trains a Naive Bayes classifier on both positive and
+             negative movie reviews, and then tests it using a testing set. The movie
+             reviews are obtained from the NLTK library.
+To execute: python3 main.py
+"""
 
-nltk.download('movie_reviews')
-nltk.download('stopwords')
+from utils import *
+from makeData import getBagOfWords
 
-def read_words(filename):
-    words = []
-    with open(filename, 'r') as infile:
-        lines = infile.readlines()
-        for line in lines:
-            words.append(line.strip())
-
-    return words
-
-def makeBagOfWords(reviewLst):
-    '''
-    Extract words for each review
-    Throw out those that are not alphabetic as well as short frequent English words
-    Add the result to bag
-    At the end, bag will be the list of words in a certain category of review.
-    Use NLTK functions
-    '''
-                  
-    bag = []
-    for review in reviewLst:
-        words = movie_reviews.words(review)  #list of words in a review 
-        words = [word for word in words if word.isalpha()] #remove items witn non-alpha chars
-        stop_words = set(stopwords.words('english'))
-        words = [word for word in words if word not in stop_words] #stop words removed
-        bag = bag + words
-    return bag
-
-def word_counts(words):
-  counts = {}
-  for word in words:
-    if word in counts:
-      counts[word] += 1
-    else:
-      counts[word] = 1
-
-  return counts
-
-def word_likelihoods(words, vocab):
-    counts = word_counts(words)
-    likelihoods = {}
-    denominator = len(words) + len(vocab)
-    for word in vocab:
-        if word in counts:
-            likelihoods[word] = (counts[word] + 1) / denominator
-        else:
-            likelihoods[word] = 1 / denominator
-    return likelihoods
-
-def test_review(review, priors, likelihoods):
-    classes = priors.keys()
- 
-    sums = {}
-    for c in classes:
-        sums[c] = math.log(priors[c])
-        for word in review:
-            if word in likelihoods[c]:
-                sums[c] += math.log(likelihoods[c][word])
- 
-    max_class = max(classes, key= lambda c: sums[c])
-    return max_class
-
-
+'''
+Main function
+'''
 def main():
     '''
     Training
@@ -88,18 +37,29 @@ def main():
     '''
     pos_reviews = read_words('posTst.txt')
     neg_reviews = read_words('negTst.txt')
-    print(pos_reviews)
+
+    conf_matrix = {'tp': 0, 'fp': 0, 'tn': 0, 'fn': 0 }
 
     for pos_review in pos_reviews:
-        review_words = makeBagOfWords([pos_review])
+        review_words = getBagOfWords(pos_review)
         prediction_class = test_review(review_words, priors, likelihoods)
-        print(prediction_class)
 
+        if prediction_class == "pos":
+            conf_matrix['tp'] += 1
+        else:
+            conf_matrix['fn'] += 1
 
     for neg_review in neg_reviews:
-        review_words = makeBagOfWords([neg_review])
+        review_words = getBagOfWords(neg_review)
         prediction_class = test_review(review_words, priors, likelihoods)
-        print(prediction_class)
+
+        if prediction_class == "neg":
+            conf_matrix['tn'] += 1
+        else:
+            conf_matrix['fp'] += 1
+
+    confusion_matrix = get_confusion_matrix(conf_matrix)
+    print(confusion_matrix)
 
 if __name__ == '__main__':
     main()
