@@ -1,3 +1,7 @@
+import numpy as np
+
+from mypytable import MyPyTable
+
 class MyNaiveBayesClassifier:
     """Represents a Naive Bayes classifier.
 
