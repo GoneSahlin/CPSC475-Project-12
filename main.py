@@ -14,13 +14,12 @@ To execute: python3 main.py
 from utils import *
 from makeData import getBagOfWords
 
-'''
-Main function
-'''
+
 def main():
-    '''
-    Training
-    '''
+    """
+    Main function
+    """
+    # Training
     classes = ["neg", "pos"]
     priors = {"neg": 0.5, "pos": 0.5}
  
@@ -32,9 +31,7 @@ def main():
     neg_likelihoods = word_likelihoods(neg_words_train, V)
     likelihoods = {"pos": pos_likelihoods, "neg": neg_likelihoods}
 
-    '''
-    Testing
-    '''
+    # Testing
     pos_reviews = read_words('posTst.txt')
     neg_reviews = read_words('negTst.txt')
 
@@ -59,7 +56,9 @@ def main():
             conf_matrix['fp'] += 1
 
     confusion_matrix = get_confusion_matrix(conf_matrix)
+
     print(confusion_matrix)
+
 
 if __name__ == '__main__':
     main()

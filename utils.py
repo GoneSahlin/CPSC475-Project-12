@@ -12,12 +12,13 @@ To execute: python3 main.py
 
 import math
 
-"""
-Reads in a file and returns the list of words
-Parameter filename(str): the name of the file to be read
-Returns list of strs: the words on the file lines
-"""
+
 def read_words(filename):
+    """
+    Reads in a file and returns the list of words
+    Parameter filename(str): the name of the file to be read
+    Returns list of strs: the words on the file lines
+    """
     words = []
     with open(filename, 'r') as infile:
         lines = infile.readlines()
@@ -27,29 +28,29 @@ def read_words(filename):
     return words
 
 
-"""
-Counts the appearance of each word in a list of words
-Parameter words(list of strs): a list of words
-Returns dict of str-int key-value pairs: a dictionary containing the count of each word in the list
-"""
 def word_counts(words):
-  counts = {}
-  for word in words:
-    if word in counts:
-      counts[word] += 1
-    else:
-      counts[word] = 1
+    """
+    Counts the appearance of each word in a list of words
+    Parameter words(list of strs): a list of words
+    Returns dict of str-int key-value pairs: a dictionary containing the count of each word in the list
+    """
+    counts = {}
+    for word in words:
+        if word in counts:
+            counts[word] += 1
+        else:
+            counts[word] = 1
 
-  return counts
+        return counts
 
 
-"""
-Gets the frequency of each word in the vocabularly for a class
-Parameter words(list of strs): a list of words
-Parameter vocab(list of strs): a set of unqiue words
-Returns dict of str-float key-value pairs: a dictionary containing the freq of each word in the vocabulary
-"""
 def word_likelihoods(words, vocab):
+    """
+    Gets the frequency of each word in the vocabularly for a class
+    Parameter words(list of strs): a list of words
+    Parameter vocab(list of strs): a set of unqiue words
+    Returns dict of str-float key-value pairs: a dictionary containing the freq of each word in the vocabulary
+    """
     counts = word_counts(words)
     likelihoods = {}
     denominator = len(words) + len(vocab)
@@ -60,14 +61,15 @@ def word_likelihoods(words, vocab):
             likelihoods[word] = 1 / denominator
     return likelihoods
 
-"""
-Classify a bag of words constructued from a review using priors and liklihoods
-Parameter review(list of strs): a list of words
-Parameter priors(dict of str-float key-value pairs): class probabilities accessed by class name
-Parameter likelihoods(dict of dicts of str-float key-value pairs): word liklihoods accessed by class name and word
-Returns str: the predicted classification of the review using Naive Bayes priors/liklihoods
-"""
+
 def test_review(review, priors, likelihoods):
+    """
+    Classify a bag of words constructued from a review using priors and liklihoods
+    Parameter review(list of strs): a list of words
+    Parameter priors(dict of str-float key-value pairs): class probabilities accessed by class name
+    Parameter likelihoods(dict of dicts of str-float key-value pairs): word liklihoods accessed by class name and word
+    Returns str: the predicted classification of the review using Naive Bayes priors/liklihoods
+    """
     classes = priors.keys()
  
     sums = {}
@@ -80,12 +82,13 @@ def test_review(review, priors, likelihoods):
     max_class = max(classes, key= lambda c: sums[c])
     return max_class
 
-"""
-Create a string rep of the confusion matrix along with accuracy, percision, and recall
-Parameter conf_matrix(dict of str-int key-value pairs): dictionary for storing true/false positives/negatives 
-Returns str: the string representation of conf matrix plus stat measures
-"""
+
 def get_confusion_matrix(conf_matrix):
+    """
+    Create a string rep of the confusion matrix along with accuracy, percision, and recall
+    Parameter conf_matrix(dict of str-int key-value pairs): dictionary for storing true/false positives/negatives 
+    Returns str: the string representation of conf matrix plus stat measures
+    """
     precision = conf_matrix['tp'] / (conf_matrix['tp'] + conf_matrix['fp'])
     recall = conf_matrix['tp'] / (conf_matrix['tp'] + conf_matrix['fn'])
     accuracy = (conf_matrix['tp'] + conf_matrix['tn']) / (conf_matrix['tp'] + conf_matrix['fp'] + conf_matrix['tn'] + conf_matrix['fn'])
